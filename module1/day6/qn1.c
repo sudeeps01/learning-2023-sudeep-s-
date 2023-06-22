@@ -1,43 +1,48 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct Student {
+    int rollno;
+    char name[20];
+    float marks;
+};
+
+void parseInputString(struct Student *students, int numStudents) {
+    for (int i = 0; i < numStudents; i++) {
+        printf("Enter details for Student %d:\n", i + 1);
+
+        printf("Roll No: ");
+        scanf("%d", &(students[i].rollno));
+
+        printf("Name: ");
+        scanf("%s", students[i].name);
+
+        printf("Marks: ");
+        scanf("%f", &(students[i].marks));
+
+        printf("\n");
+    }
+}
 
 int main() {
-    FILE *sourceFile, *destinationFile;
-    char sourceFileName[100], destinationFileName[100];
-    char ch;
+    int numStudents;
+    printf("Enter the number of students: ");
+    scanf("%d", &numStudents);
 
-    // Get the source file name from the user
-    printf("Enter the source file name: ");
-    scanf("%s", sourceFileName);
+    struct Student *students = malloc(numStudents * sizeof(struct Student));
 
-    // Open the source file in read mode
-    sourceFile = fopen(sourceFileName, "rb");
-    if (sourceFile == NULL) {
-        printf("Failed to open the source file.\n");
-        return 1;
+    parseInputString(students, numStudents);
+
+    // Print the parsed input
+    for (int i = 0; i < numStudents; i++) {
+        printf("Student %d:\n", i + 1);
+        printf("Roll No: %d\n", students[i].rollno);
+        printf("Name: %s\n", students[i].name);
+        printf("Marks: %.2f\n", students[i].marks);
     }
 
-    // Get the destination file name from the user
-    printf("Enter the destination file name: ");
-    scanf("%s", destinationFileName);
-
-    // Open the destination file in write mode
-    destinationFile = fopen(destinationFileName, "wb");
-    if (destinationFile == NULL) {
-        printf("Failed to open the destination file.\n");
-        fclose(sourceFile);
-        return 1;
-    }
-
-    // Copy the contents from source file to destination file
-    while ((ch = fgetc(sourceFile)) != EOF) {
-        fputc(ch, destinationFile);
-    }
-
-    // Close the files
-    fclose(sourceFile);
-    fclose(destinationFile);
-
-    printf("File copied successfully.\n");
+    free(students);
 
     return 0;
 }
